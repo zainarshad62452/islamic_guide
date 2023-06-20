@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "784060356651",
+    "project_id": "flutter--map-api",
+    "storage_bucket": "flutter--map-api.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784060356651:android:5f3a038afcc48c741c726e",
+        "android_client_info": {
+          "package_name": "com.example.islamic_guide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784060356651-k0e49ri8d8cdf2ljl2ljebb32f9tqj51.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUJKAlddJSR-gZZNgUoysGheqo-Hmtz0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784060356651-k0e49ri8d8cdf2ljl2ljebb32f9tqj51.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
