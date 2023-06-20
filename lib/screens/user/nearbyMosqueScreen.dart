@@ -71,7 +71,8 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
     }
   }
   Future<List<Mosque>> searchHospitals(LatLng latLng) async {
-    String apiKey = "AIzaSyDcZo05WIDbV1nSeI8OEvHslKVK8_pmvgA";
+    ///Enter api key here!!!!!!
+    String apiKey = "Enter Your Api Key";
     String baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
     String location = '${latLng.latitude},${latLng.longitude}';
     String radius = '1000'; // Search radius in meters
