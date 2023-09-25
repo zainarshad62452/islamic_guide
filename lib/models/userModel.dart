@@ -7,7 +7,7 @@ class UserModel {
   String? email;
   Timestamp? registeredOn;
   String? profileImageUrl;
-  List<MosqueModel>? addedMosque;
+  String? addedMosque;
   String? userType;
   String? token;
 
@@ -27,9 +27,7 @@ class UserModel {
     email = json['email'];
     registeredOn = json['registeredOn'];
     profileImageUrl = json['profileImageUrl'];
-    if (json['addedMosque'] != null) {
-      addedMosque = List<MosqueModel>.from(json['addedMosque'].map((model) => MosqueModel.fromJson(model))).toList();
-    }
+    addedMosque = json['addedMosque'];
     userType = json['userType'];
     uid = json['uid'];
     userType =json['userType'];
@@ -42,7 +40,7 @@ class UserModel {
     data['email'] = this.email;
     data['registeredOn'] = this.registeredOn;
     data['profileImageUrl'] = this.profileImageUrl;
-    data['addedMosque'] = addedMosque?.map((mosque) => mosque.toJson()).toList();
+    data['addedMosque'] = addedMosque;
     data['userType'] = this.userType;
     data['uid'] = this.uid;
     data['token'] = this.token;

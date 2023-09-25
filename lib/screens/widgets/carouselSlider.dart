@@ -1,11 +1,11 @@
-import 'package:islamic_guide/screens/doctor/myAppointments.dart';
-import 'package:islamic_guide/screens/user/myAppointments.dart';
-import 'package:islamic_guide/screens/user/nutritionsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:islamic_guide/controllers/userController.dart';
+import 'package:islamic_guide/screens/admin/mosqueDetails.dart';
 
 import '../../models/bannerModel.dart';
+import '../user/mosqueTimeWidget.dart';
 
 class Carouselslider extends StatelessWidget {
   @override
@@ -33,15 +33,20 @@ class Carouselslider extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                // index == 0
-                //     ? Navigator.push(context,
-                //         MaterialPageRoute(builder: (BuildContext context) {
-                //         return MyAppointments(title: "Binded Mosque",);
-                //       }))
-                //     : Navigator.push(context,
-                //         MaterialPageRoute(builder: (BuildContext context) {
-                //         return NutritionsScreen();
-                //       }));
+                index == 0
+                    ? Navigator.push(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                        return Scaffold(
+                            appBar: AppBar(
+                              backgroundColor: Colors.tealAccent.shade700,
+                              title: Text("Prayer Timing"),
+                            ),
+                            body: SafeArea(child: MosqueTiming()));
+                      }))
+                    : Navigator.push(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                        return MosqueDetails(model: userCntr.bindedMosque.value);
+                      }));
               },
               child: Stack(
                 children: [

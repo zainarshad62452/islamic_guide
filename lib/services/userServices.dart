@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../Controllers/loading.dart';
+import '../Models/MosqueModel.dart';
 import '../models/userModel.dart';
 import '../screens/widgets/snackbar.dart';
 import '../services/Reception.dart';
@@ -10,7 +11,7 @@ class UserServices {
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
 
-  registerUser({required String name, required User user,String? address,String? contactNo}) async {
+   registerUser({required String name, required User user,String? address,String? contactNo}) async {
     var x = UserModel(
         name: name,
         email: user.email,
@@ -82,14 +83,31 @@ class UserServices {
       return null;
     }
   }
-  updateLocation(double latitude,double longitude) async {
+  bindMosque(MosqueModel id, bool isBind) async {
     try {
       loading(true);
       await firestore
-          .collection("needy")
+          .collection("users")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .update({"latitude": latitude,"longitude": longitude})
-          .then((value) =>snackbar("Done","Your Location has been Set")).onError((error, stackTrace)=>alertSnackbar("Error $error"));
+          .update({
+        "addedMosque":isBind?id.uid:""
+      })
+          .then((value)
+          {
+            List<String> mosqueWitness;
+            if(id.mosqueWitness == null){
+              mosqueWitness = [];
+            }else{
+              mosqueWitness = id.mosqueWitness!;
+            }
+            isBind?mosqueWitness.add(auth.currentUser!.uid):mosqueWitness.removeWhere((element) => element == auth.currentUser!.uid);
+            firestore.collection("mosques").doc(id.uid).update(
+              {
+                "mosqueWitness": mosqueWitness,
+              }
+            ).then((value) => snackbar("Done",isBind?"Mosque has been binded successfully\nPlease Refresh.....":"Mosque has been unbinded successfully\nPlease Refresh.....")).onError((error, stackTrace)=>alertSnackbar("Error $error"));
+          }
+          ).onError((error, stackTrace)=>alertSnackbar("Error $error"));
       loading(false);
     } catch (e) {
       loading(false);

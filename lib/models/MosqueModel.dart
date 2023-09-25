@@ -11,11 +11,10 @@ class MosqueModel {
   String? profileImageUrl;
   String? mosqueKeeperUid;
   String? mosqueKeeperName;
-  String? mosqueKeeperEmail;
-  bool? isJamai;
-  bool? isMadrasa;
+  String? mosqueKeeperPhone;
+  String? mosqueType;
   bool? isVerified;
-  List<UserModel>? mosqueWitness;
+  List<String>? mosqueWitness;
   PrayerTimingModel? prayerTiming;
   String? address;
   String? token;
@@ -27,9 +26,8 @@ class MosqueModel {
         this.uid,
         this.mosqueKeeperUid,
         this.mosqueKeeperName,
-        this.mosqueKeeperEmail,
-        this.isJamai,
-        this.isMadrasa,
+        this.mosqueKeeperPhone,
+        this.mosqueType,
         this.address,
         this.latitude,
         this.isVerified,
@@ -46,21 +44,20 @@ class MosqueModel {
     uid = json['uid'];
     mosqueKeeperUid = json['mosqueKeeperUid'];
     mosqueKeeperName = json['mosqueKeeperName'];
-    mosqueKeeperEmail = json['mosqueKeeperEmail'];
-    address =json['address'];
-    isJamai =json['isJamai'];
-    isMadrasa =json['isMadrasa'];
-    isVerified =json['isVerified'];
+    mosqueKeeperPhone = json['mosqueKeeperPhone'];
+    address = json['address'];
+    mosqueType = json['mosqueType'];
+    isVerified = json['isVerified'];
     if (json['mosqueWitness'] != null) {
-      mosqueWitness = List<UserModel>.from(
-          json['mosqueWitness'].map((model) => UserModel.fromJson(model)))
-          .toList();
+      mosqueWitness = List<String>.from(json['mosqueWitness']);
     }
-      prayerTiming =PrayerTimingModel.fromJson(json);
+
+    // Correctly access the prayerTiming field
+    prayerTiming = json['prayerTiming'] != null ? PrayerTimingModel.fromJson(json['prayerTiming']) : null;
+
     latitude = json['latitude'];
     longitude = json['longitude'];
     token = json['token'];
-
   }
 
   Map<String, dynamic> toJson() {
@@ -71,14 +68,13 @@ class MosqueModel {
     data['uid'] = this.uid;
     data['prayerTiming'] = this.prayerTiming!.toJson();
     data['address'] = this.address;
-    data['isMadrasa'] = this.isMadrasa;
-    data['isJamai'] = this.isJamai;
+    data['mosqueType'] = this.mosqueType;
     data['isVerified'] = this.isVerified;
-    data['mosqueWitness'] = this.mosqueWitness?.map((user) => user.toJson()).toList();
+    data['mosqueWitness'] = this.mosqueWitness;
     data['latitude'] = this.latitude;
     data['mosqueKeeperUid'] = this.mosqueKeeperUid;
     data['mosqueKeeperName'] = this.mosqueKeeperName;
-    data['mosqueKeeperEmail'] = this.mosqueKeeperEmail;
+    data['mosqueKeeperPhone'] = this.mosqueKeeperPhone;
     data['longitude'] = this.longitude;
     data['token'] = this.token;
     return data;

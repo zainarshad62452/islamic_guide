@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:islamic_guide/controllers/mosqueController.dart';
 import 'dart:convert';
 
+import '../../Models/MosqueModel.dart';
 import '../widgets/snackbar.dart';
 
 class NearbyMosquePage extends StatefulWidget {
@@ -16,6 +18,7 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
   late GoogleMapController mapController;
   List<Marker> markers = [];
   late Position currentPosition;
+  Set<Marker> markerSet = Set();
 
   @override
   void initState() {
@@ -52,9 +55,9 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
         new CameraPosition(target: latLngPosition, zoom: 14);
         newGoogleMapController
             .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-        updateMarkers(latLngPosition);
+        markerSet = _createMarkers();
         setState(() {
-          markers.add(
+          markerSet.add(
             Marker(
               markerId: MarkerId('current_location'),
               position: LatLng(position.latitude, position.longitude),
@@ -70,72 +73,47 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
       alertSnackbar("Location Access Denied");
     }
   }
-  Future<List<Mosque>> searchHospitals(LatLng latLng) async {
-    ///Enter api key here!!!!!!
-    String apiKey = "Enter Your Api Key";
-    String baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-    String location = '${latLng.latitude},${latLng.longitude}';
-    String radius = '1000'; // Search radius in meters
-    String type = 'mosque'; // Restrict results to hospitals
+  // Future<List<Mosque>> search(LatLng latLng) async {
+  //   ///Enter api key here!!!!!!
+  //   String apiKey = "AIzaSyDcZo05WIDbV1nSeI8OEvHslKVK8_pmvgA";
+  //   String baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+  //   String location = '${latLng.latitude},${latLng.longitude}';
+  //   String radius = '1000'; // Search radius in meters
+  //   String type = 'mosque'; // Restrict results to hospitals
+  //
+  //   String url =
+  //       '$baseUrl?location=$location&radius=$radius&type=$type&key=$apiKey';
+  //
+  //   final response = await http.get(Uri.parse(url));
+  //
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     List<Mosque> hospitals = [];
+  //
+  //     if (data['results'] != null) {
+  //       for (var result in data['results']) {
+  //         String id = result['place_id'];
+  //         String name = result['name'];
+  //         double latitude = result['geometry']['location']['lat'];
+  //         double longitude = result['geometry']['location']['lng'];
+  //
+  //         hospitals.add(
+  //           Mosque(
+  //             id: id,
+  //             name: name,
+  //             latitude: latitude,
+  //             longitude: longitude,
+  //           ),
+  //         );
+  //       }
+  //     }
+  //
+  //     return hospitals;
+  //   } else {
+  //     throw Exception('Failed to fetch hospitals');
+  //   }
+  // }
 
-    String url =
-        '$baseUrl?location=$location&radius=$radius&type=$type&key=$apiKey';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List<Mosque> hospitals = [];
-
-      if (data['results'] != null) {
-        for (var result in data['results']) {
-          String id = result['place_id'];
-          String name = result['name'];
-          double latitude = result['geometry']['location']['lat'];
-          double longitude = result['geometry']['location']['lng'];
-
-          hospitals.add(
-            Mosque(
-              id: id,
-              name: name,
-              latitude: latitude,
-              longitude: longitude,
-            ),
-          );
-        }
-      }
-
-      return hospitals;
-    } else {
-      throw Exception('Failed to fetch hospitals');
-    }
-  }
-
-  void updateMarkers(LatLng latLng) async {
-    List<Mosque> hospitals = await searchHospitals(latLng);
-
-    setState(() {
-      markers.clear();
-
-      markers.add(
-        Marker(
-          markerId: MarkerId('current_location'),
-          position: latLng,
-          infoWindow: InfoWindow(title: 'You are here'),
-        ),
-      );
-
-      markers.addAll(
-        hospitals.map(
-              (hospital) => Marker(
-            markerId: MarkerId(hospital.id),
-            position: LatLng(hospital.latitude, hospital.longitude),
-            infoWindow: InfoWindow(title: hospital.name),
-          ),
-        ),
-      );
-    });
-  }
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
@@ -159,7 +137,7 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
             myLocationEnabled: true,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: true,
-            markers: Set<Marker>.from(markers),
+            markers: markerSet,
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
@@ -172,15 +150,6 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
           ),
         ],
       ),
-      // GoogleMap(
-      //   initialCameraPosition: CameraPosition(
-      //     target: LatLng(0, 0),
-      //   ),
-      //   markers: Set<Marker>.from(markers),
-      //   onMapCreated: (GoogleMapController controller) {
-      //     mapController = controller;
-      //   },
-      // ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.tealAccent.shade700,
         onPressed: () {
@@ -189,6 +158,58 @@ class _NearbyMosquePageState extends State<NearbyMosquePage> {
         child: Icon(Icons.my_location),
       ),
     );
+  }
+  Set<Marker> _createMarkers() {
+    Set<Marker> markerSet = Set();
+    for (MosqueModel mosque in mosqueCntr.allItems!.value) {
+      if(mosque.isVerified!){
+        markerSet.add(Marker(
+          markerId: MarkerId(mosque.uid!),
+          position: LatLng(mosque.latitude!, mosque.longitude!),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(mosque.name??""),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Mosque Address: ${mosque.address??""}",),
+                      Divider(),
+                      Text("Mosque Keeper Name: ${mosque.mosqueKeeperName??""}",),
+                      Divider(),
+                      Text("Mosque Keeper Phone Number: ${mosque.mosqueKeeperPhone??""}",),
+                      Divider(),
+                      Text("Mosque Type: ${mosque.mosqueType??""}",),
+                      Divider(),
+                      Text("Prayer Timings",),
+                      Text("Fajar : ${mosque.prayerTiming!.fajar??""}",),
+                      Text("Duhur : ${mosque.prayerTiming!.zuhur??""}",),
+                      Text("Asr : ${mosque.prayerTiming!.asar??""}",),
+                      Text("Maghrib : ${mosque.prayerTiming!.maghrib??""}",),
+                      Text("Isha : ${mosque.prayerTiming!.isha??""}",),
+                      Text("Jumma : ${mosque.prayerTiming!.jummah??""}",),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Close'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ));
+      }
+
+    }
+
+    return markerSet;
   }
 }
 

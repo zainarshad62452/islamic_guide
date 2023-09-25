@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset("assets/prayer rug.png",),
+                      Image.asset("assets/logo.png",),
                       Text(
                         'Islamic Guide',
                         style: GoogleFonts.b612(

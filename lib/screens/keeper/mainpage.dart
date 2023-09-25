@@ -1,36 +1,35 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:islamic_guide/screens/doctor/userProfile.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:islamic_guide/firestore-data/searchList.dart';
-import 'package:islamic_guide/screens/user/homePage.dart';
-import 'package:islamic_guide/screens/user/myAppointments.dart';
-import 'package:islamic_guide/screens/user/userProfile.dart';
-import 'package:islamic_guide/screens/doctor/patientsList.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:islamic_guide/Controllers/mosqueKeeperCntroller.dart';
+import 'package:islamic_guide/Services/Authentication.dart';
+import 'package:islamic_guide/screens/keeper/addMosque.dart';
+import 'package:islamic_guide/screens/keeper/updateTimings.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
-import 'package:quick_actions/quick_actions.dart';
-
-import '../user/doctorProfile.dart';
 import 'homePage.dart';
-import 'myAppointments.dart';
+import 'mosqueDetails.dart';
 
-class DoctorMainPage extends StatefulWidget {
+class MosqueKeeperMainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<DoctorMainPage> {
+class _MainPageState extends State<MosqueKeeperMainPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
-  List<Widget> _pages = [
-    DoctorHomePage(),
-    DoctorAppointments(title: "My Appointments"),
-    DoctorMainProfile(),
+  final List<Widget> _pages = [
+    MosqueKeeperHomaPage(),
+    MosqueDetailsUpdates(),
+    Center(child: TextButton(onPressed: (){
+      Authentication().signOut();
+    }, child: Text("SignOut")),)
   ];
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -112,7 +111,7 @@ class _MainPageState extends State<DoctorMainPage> {
                     icon: _selectedIndex == 2
                         ? Typicons.calendar
                         : Typicons.calendar_outline,
-                    text: 'Schedule',
+                    text: 'Mosque Details',
                   ),
                   GButton(
                     iconSize: 29,

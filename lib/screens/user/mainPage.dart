@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:islamic_guide/screens/user/doctorsList.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:islamic_guide/firestore-data/searchList.dart';
+import 'package:islamic_guide/Services/Authentication.dart';
 import 'package:islamic_guide/screens/user/homePage.dart';
-import 'package:islamic_guide/screens/user/myAppointments.dart';
-import 'package:islamic_guide/screens/user/userProfile.dart';
-import 'package:islamic_guide/screens/doctor/patientsList.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/date_symbol_data_file.dart';
+import 'package:islamic_guide/screens/user/mosqueTimeWidget.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -26,8 +23,11 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   List<Widget> _pages = [
     HomePage(),
-
-    UserProfile(),UserProfile(),UserProfile(),
+    SafeArea(child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: MosqueTiming(),
+    )),
+    Center(child: MaterialButton(onPressed: ()=>Authentication().signOut(),child: Text("Log Out"),),)
   ];
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -105,15 +105,11 @@ class _MainPageState extends State<MainPage> {
                     text: 'Home',
                   ),
                   GButton(
-                    icon: CupertinoIcons.search,
-                    text: 'Search',
-                  ),
-                  GButton(
                     iconSize: 28,
                     icon: _selectedIndex == 2
                         ? Typicons.calendar
                         : Typicons.calendar_outline,
-                    text: 'Schedule',
+                    text: 'Mosque Timing',
                   ),
                   GButton(
                     iconSize: 29,

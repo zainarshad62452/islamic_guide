@@ -1,9 +1,8 @@
-import 'package:islamic_guide/screens/doctor/myAppointments.dart';
-import 'package:islamic_guide/screens/user/myAppointments.dart';
-import 'package:islamic_guide/screens/user/nutritionsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:islamic_guide/screens/keeper/mosqueDetails.dart';
+import 'package:islamic_guide/screens/keeper/updateTimings.dart';
 
 import '../../models/bannerModel.dart';
 
@@ -36,11 +35,11 @@ class CarouselSlider2 extends StatelessWidget {
                 index == 0
                     ? Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return DoctorAppointments(title:"My Appointments");
+                      return PrayerTimingPage();
                     }))
                     : Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return NutritionsScreen();
+                      return MosqueDetailsUpdates();
                     }));
               },
               child: Stack(

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:islamic_guide/Controllers/loading.dart';
+import 'package:islamic_guide/controllers/mosqueController.dart';
 import 'package:islamic_guide/screens/splashScreen.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -79,6 +80,7 @@ Future<void> main() async {
     await setupFlutterNotifications();
   }
   Get.put(LoadingController());
+  Get.put(MosqueController());
   runApp(const MyApp());
 }
 
@@ -87,6 +89,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Ilsamic Guide',
       home: SplashScreen(),
     );

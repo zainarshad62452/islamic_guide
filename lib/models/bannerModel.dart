@@ -17,7 +17,7 @@ List<BannerModel> bannerCards = [
       ],
       "assets/logo pic.png"),
   new BannerModel(
-      "Alerts",
+      "Mosques Details",
       [
         Color(0xffb6d4fa),
         Color(0xffcfe3fc),

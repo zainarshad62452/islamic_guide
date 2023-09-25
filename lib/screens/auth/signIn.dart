@@ -63,8 +63,7 @@ class _SignInState extends State<SignIn> {
               width: double.infinity,
               child: Container(
                 child: Image.asset(
-                  'assets/Mosque.jpg',
-                  scale: 3.5,
+                  'assets/masjid.png',
                 ),
               ),
             ),
@@ -206,42 +205,6 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
             ),
-            // Container(
-            //   padding: EdgeInsets.only(top: 15),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Container(
-            //         decoration: BoxDecoration(
-            //             color: Colors.red[700],
-            //             borderRadius: BorderRadius.circular(32)),
-            //         child: IconButton(
-            //           icon: Icon(
-            //             Icons.login,
-            //             color: Colors.white,
-            //           ),
-            //           onPressed: () {},
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         width: 30,
-            //       ),
-            //       Container(
-            //         decoration: BoxDecoration(
-            //             // color: Colors.blue[900],
-            //           color: Colors.tealAccent.shade700,
-            //             borderRadius: BorderRadius.circular(32)),
-            //         child: IconButton(
-            //           icon: Icon(
-            //             Icons.ac_unit,
-            //             color: Colors.white,
-            //           ),
-            //           onPressed: () {},
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
             Container(
               child: Padding(
                 padding: const EdgeInsets.only(top: 18.0),

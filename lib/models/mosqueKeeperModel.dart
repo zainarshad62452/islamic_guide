@@ -9,7 +9,7 @@ class MosqueKeeperModel {
   Timestamp? registeredOn;
   String? profileImageUrl;
   String? contactNo;
-  MosqueModel? addedMosque;
+  String? addedMosque;
   String? userType;
   String? address;
   String? token;
@@ -28,7 +28,7 @@ class MosqueKeeperModel {
       });
 
   MosqueKeeperModel.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    name = json['displayName'];
     email = json['email'];
     registeredOn = json['registeredOn'];
     profileImageUrl = json['image'];
@@ -37,17 +37,17 @@ class MosqueKeeperModel {
     uid = json['uid'];
     address =json['address'];
     token = json['token'];
-    addedMosque = MosqueModel.fromJson(json);
+    addedMosque = json['photoURL'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
+    data['displayName'] = this.name;
     data['email'] = this.email;
     data['registeredOn'] = this.registeredOn;
     data['image'] = this.profileImageUrl;
     data['phoneNumber'] = this.contactNo;
-    data['addedMosque'] = this.addedMosque?.toJson();
+    data['photoURL'] = this.addedMosque;
     data['uid'] = this.uid;
     data['token'] = this.token;
     data['address'] = this.address;

@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:islamic_guide/controllers/mosqueController.dart';
 import 'package:islamic_guide/screens/auth/signIn.dart';
 import 'package:islamic_guide/screens/user/mainPage.dart';
 import '../Controllers/mosqueKeeperCntroller.dart';
 import '../controllers/userController.dart';
+import '../screens/admin/homePage.dart';
+import '../screens/keeper/homePage.dart';
+import '../screens/keeper/mainpage.dart';
 import 'Authentication.dart';
 
 class Reception {
@@ -21,20 +25,11 @@ class Reception {
     } catch (e) {
       try {
         type = await firestore
-            .collection("mosqueKeeper")
+            .collection("mosque_keeper")
             .doc(auth.currentUser!.uid)
             .get()
             .then((value) => value['userType'].toString());
       } catch (e) {
-        try{
-          type = await firestore
-              .collection("admin")
-              .doc(auth.currentUser!.uid)
-              .get()
-              .then((value) => value['userType'].toString());
-        }catch(e){
-          return type;
-        }
         return type;
       }
       return type;
@@ -44,33 +39,22 @@ class Reception {
 
   userReception() async {
     final type = await fetchUserType();
+    print(type);
     if(FirebaseAuth.instance.currentUser!=null){
-      // if(!FirebaseAuth.instance.currentUser!.emailVerified){
-      //   FirebaseAuth.instance.currentUser!.sendEmailVerification();
-      //   // Get.to(()=>EmailVerification());
-      // }else
-        if (type == "User") {
-          // Get.put(NeedyController());
+      if (FirebaseAuth.instance.currentUser!.email == "admin@islamicguide.com") {
+        Get.put(UserController());
+        Get.put(MosqueKeeperController());
+        Get.put(MosqueController());
+        Get.offAll(() => AdminHomePage());
+
+      }else if (type == "User") {
           Get.put(UserController());
-          // Get.put(MosqueKeeperController());
         Get.offAll(() => MainPage());
 
       } else if (type == "MosqueKeeper") {
-        // Get.offAll(() => Dashboard());
-        // Get.put(DonorController());
-        // Get.put(NeedyController());
-        // Get.put(VolunteerController());
           Get.put(UserController());
-          // Get.put(MosqueKeeperController());
-          Get.offAll(() => MainPage());
-      }else if (type == "Admin") {
-        // Get.offAll(() => VolunteerDashboard());
-        // Get.put(VolunteerController());
-        // Get.put(NeedyController());
-        // Get.put(DonorController());
-          Get.put(UserController());
-          // Get.put(MosqueKeeperController());
-          Get.offAll(() => MainPage());
+          Get.put(MosqueKeeperController());
+          Get.offAll(() => MosqueKeeperMainPage());
       }else{
         Authentication().signOut();
       }

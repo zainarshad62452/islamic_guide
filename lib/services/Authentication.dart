@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:islamic_guide/screens/auth/signIn.dart';
 import 'package:islamic_guide/screens/user/mainPage.dart';
 
 import '../Controllers/loading.dart';
 import '../screens/widgets/snackbar.dart';
 import 'Reception.dart';
 import 'mosqueKeeperServices.dart';
-import 'needyServices.dart';
+import 'userServices.dart';
 
 
 class Authentication {
@@ -125,7 +126,7 @@ class Authentication {
     try {
       await auth.signOut();
       Get.put(LoadingController());
-      // Get.offAll(() => LoginPage());
+      Get.offAll(() => SignIn());
     } catch (e) {
       snackbar("Error Signing Out", e.toString()); //TODO firebase exception
     }

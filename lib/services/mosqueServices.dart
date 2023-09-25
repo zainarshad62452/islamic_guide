@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:islamic_guide/Controllers/mosqueKeeperCntroller.dart';
+import 'package:islamic_guide/controllers/mosqueController.dart';
 import 'package:islamic_guide/models/mosqueKeeperModel.dart';
+import 'package:islamic_guide/models/prayerTimingModel.dart';
+import 'package:islamic_guide/screens/keeper/homePage.dart';
 import '../Controllers/loading.dart';
 import '../Models/MosqueModel.dart';
+import '../screens/keeper/mainpage.dart';
 import '../screens/widgets/snackbar.dart';
 import 'NotificationServices.dart';
 
@@ -10,26 +16,36 @@ class MosqueServices {
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
 
-  registerMosque({required String name, String? mosquePic,String? quantity,DateTime? date,MosqueKeeperModel? mosqueKeeper,String? location,double? longitude,double? latitude,String? phone,bool? isJamai,bool? isMadrasa}) async {
+  registerMosque({required String name, String? mosquePic,PrayerTimingModel? prayerTiming,String? location,double? longitude,double? latitude,String? mosqueType,}) async {
     loading(true);
     var x = MosqueModel(
         name: name,
         registeredOn: Timestamp.now(),
-        mosqueKeeperName: mosqueKeeper!.name,
-        mosqueKeeperUid: mosqueKeeper!.uid,
-        mosqueKeeperEmail: mosqueKeeper!.email,
+        mosqueKeeperName: mosqueKeeperCntr.user?.value.name,
+        mosqueKeeperUid: auth.currentUser!.uid,
+        mosqueKeeperPhone: mosqueKeeperCntr.user?.value.contactNo,
         profileImageUrl: mosquePic,
       address: location,
       longitude: longitude,
       latitude: latitude,
-        isJamai: isJamai,
+        prayerTiming: prayerTiming,
+      mosqueType: mosqueType,
       isVerified: false,
-      isMadrasa: isMadrasa
     );
     try {
-      final user =await firestore.collection("mosques").doc();
+      final user = firestore.collection("mosques").doc();
       x.uid = user.id;
-      user.set(x.toJson()).then((value) => print('Successfully Added Mosque\nYour request is on review.'));
+      user.set(x.toJson()).then((value) {
+        firestore.collection('mosque_keeper').doc(auth.currentUser?.uid).update(
+          {
+            'photoURL':x.uid
+          }
+        ).then((value) {
+          Get.offAll((MosqueKeeperMainPage()));
+          snackbar("Done", "Mosque has been registered successfully and sent for review");
+        });
+      });
+
       loading(false);
     } catch (e) {
       loading(false);
@@ -75,6 +91,37 @@ class MosqueServices {
       loading(false);
     }
   }
+  approveMosque(String item,) async {
+    try {
+      loading(true);
+      print(Value);
+      await firestore
+          .collection("mosques")
+          .doc(item)
+          .update({"isVerified": true})
+          .then((value) =>snackbar("Done","Successfully Approved!!")).onError((error, stackTrace)=>alertSnackbar("Error $error"));
+      loading(false);
+    } catch (e) {
+      loading(false);
+    }
+  }
+  updateTimings(String item,PrayerTimingModel value) async {
+    try {
+      loading(true);
+      print(value);
+      print(item);
+
+      await firestore
+          .collection("mosques")
+          .doc(item)
+          .update({"prayerTiming": value.toJson()})
+          .then((value) =>snackbar("Done","Successfully Update!!")).onError((error, stackTrace)=>alertSnackbar("Error $error"));
+      loading(false);
+    } catch (e) {
+      loading(false);
+    }
+  }
+
   // resurve(MosqueModel item,String? email,MosqueModel? user) async {
   //   try {
   //     loading(true);

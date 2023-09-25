@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:islamic_guide/models/mosqueKeeperModel.dart';
 
-import '../Models/adminModel.dart';
+
 import '../Services/mosqueKeeperServices.dart';
 
 
